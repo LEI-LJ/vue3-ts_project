@@ -17,10 +17,11 @@ import {
 // history 用来控制路由模式
 // createWebHistory history模式
 // createWebHashHistory hash模式
+console.log(import.meta)
 const router = createRouter({
   // vue3 中修改路由模式 通过createWbeHistory()  createWebHashHistory()
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: []
+  routes: [{ path: '/', component: () => import('@/App.vue') }]
 })
 
 export default router
