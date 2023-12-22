@@ -1,46 +1,76 @@
 <template>
   <div>
-    <vanButton type="primary">你好</vanButton>
+    <van-button type="primary">你好</van-button>
     <button @click="handleClick">登录</button>
 
     <button @click="userStore.delUser()">退出</button>
-    <van-dropdown-menu>
-      <van-dropdown-item v-model="value1" :options="option1" />
-      <van-dropdown-item v-model="value2" :options="option2" />
-    </van-dropdown-menu>
+    <div
+      @click="
+        async () => {
+          userStore.delUser()
+          const res = await text401()
+          console.log(res)
+        }
+      "
+    >
+      测试401错误
+    </div>
+    <button
+      @click="
+        () => {
+          arr[1] = 0
+        }
+      "
+    >
+      改变数组中的数字
+    </button>
+    <span v-for="(item, index) in arr" :key="index">
+      {{ item }}
+    </span>
   </div>
+  <div @click="handleNumClick">数字点击</div>
 </template>
 
 <script setup lang="ts">
 // import { useUserStore } from './stores/user'
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useUserStore } from './stores'
-import { login } from './apis/login'
-const value1 = ref(0)
-const value2 = ref('a')
-const option1 = [
-  { text: '全部商品', value: 0 },
-  { text: '新款商品', value: 1 },
-  { text: '活动商品', value: 2 }
-]
-const option2 = [
-  { text: '默认排序', value: 'a' },
-  { text: '好评排序', value: 'b' },
-  { text: '销量排序', value: 'c' }
-]
-
+import { login, text401 } from './apis/login'
+const arr = ref([1, 2, 3])
 // 模拟登录按钮
 const userStore = useUserStore()
+type ResponseType<T> = {
+  code: number
+  data: T
+}
+
 const handleClick = async () => {
   userStore.setUser({
-    token: 'token',
+    token: 'token 121212',
     id: '1121',
     account: '1212',
     mobile: '1212',
     avatar: '1212'
   })
-  const res = await login({ mobile: 13210090581, password: '121212' })
-  console.log(res)
+  const res = await login<ResponseType>({
+    mobile: 13210090581,
+    password: '121212'
+  })
+  console.log(res.data)
 }
+let a = {
+  num: 1
+}
+
+const handleNumClick = () => {
+  a.num = 4
+}
+watch(
+  () => a,
+  () => {
+    console.log('我发生改变了')
+  },
+  { deep: true }
+)
 </script>
 <style scoped></style>
