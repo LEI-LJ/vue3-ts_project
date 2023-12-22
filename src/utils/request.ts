@@ -36,13 +36,23 @@ instance.interceptors.response.use(
     // 业务逻辑错误的统一处理 跳转到登陆页面 重新登陆
     // 打印router 可以显示当前页面信息
     // console.log(router.currentRoute.value.fullPath)
-    router.push('/login?redirect=' + router.currentRoute.value.fullPath)
+    if (err.response.status === 401) {
+      const userStore = useUserStore()
+      console.log(userStore)
+      router.push('/login?redirect=' + router.currentRoute.value.fullPath)
+    }
     // TODO 5. 处理401错误
     return Promise.reject(err)
   }
 )
+// 我的 post 类型
 export const myPost = <T, Data>(url: string, data: Data) => {
-  return axios.post<any, ResponseType<T>>(url, data)
+  return instance.post<any, ResponseType<T>>(url, data)
+}
+
+// 我的 get类型
+export const myGet = <T, Params>(url: string, Params: Params) => {
+  return instance.post<any, ResponseType<T>>(url, { Params })
 }
 
 export default instance
