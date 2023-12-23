@@ -11,3 +11,11 @@ export type User = {
   /** 头像 */
   avatar: string
 }
+
+// 验证码类型
+export type CodeType =
+  | 'login'
+  | 'register'
+  | 'changeMobile'
+  | 'forgetPassword'
+  | 'bindMobile'

@@ -1,4 +1,73 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import { codeRules, mobileRules, passwordRules } from '@/utils/rules'
+import { showToast, type FormInstance } from 'vant'
+import { ref, onUnmounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useUserStore } from '@/stores'
+import { CodeLogin, login, sendMobileCode } from '@/apis/user'
+// const text = ref('1212')
+// const inputRef = ref(null)
+// nextTick(() => {
+//   console.log(inputRef.value)
+// })
+const formRef = ref<FormInstance>()
+const router = useRouter()
+const route = useRoute()
+const userStore = useUserStore()
+const mobile = ref('13230000006')
+const password = ref('abc12345')
+const code = ref('')
+const agree = ref(false)
+// 切换登录
+const isPass = ref(true)
+//判断是否发送验证码
+const isCode = ref(false)
+const downLoad = ref(0)
+const timeId = ref(0)
+// 提交表单
+
+const onSubmit = async () => {
+  if (!agree.value) return showToast('请勾选用户协议')
+  console.log(router, route)
+
+  // 账号密码登录
+  if (isPass.value) {
+    const res = await login({ mobile: mobile.value, password: password.value })
+    userStore.setUser(res.data)
+  } else {
+    // 手机号验证码登录
+    const res = await CodeLogin({ mobile: mobile.value, code: code.value })
+    console.log(res.data)
+    userStore.setUser(res.data)
+  }
+
+  router.replace({ path: (route.query.redirect as string) || '/' })
+}
+
+// 发送验证码
+const sendCode = async () => {
+  await formRef.value?.validate('mobile')
+  if (downLoad.value > 0) return showToast('验证码正在发送')
+  const res = await sendMobileCode({ mobile: mobile.value, type: 'login' })
+  console.log(res.data.code)
+  code.value = res.data.code
+  showToast('验证码发送成功')
+  if (!isCode.value) {
+    downLoad.value = 60
+    isCode.value = true
+    timeId.value = setInterval(() => {
+      if (downLoad.value <= 0) {
+        clearInterval(timeId.value)
+        isCode.value = false
+      }
+      downLoad.value--
+    }, 1000)
+  }
+}
+onUnmounted(() => {
+  clearInterval(timeId.value)
+})
+</script>
 
 <template>
   <div class="login-page">
@@ -8,18 +77,43 @@
     ></cpNavbar>
     <!-- 头部 -->
     <div class="login-head">
-      <h3>密码登录</h3>
-      <a href="javascript:;">
-        <span>短信验证码登录</span>
+      <h3>{{ isPass ? '密码登录' : '短信验证码登录' }}</h3>
+      <a href="javascript:;" @click="isPass = !isPass">
+        <span>{{ isPass ? '短信验证码登录' : '密码登录' }} </span>
         <van-icon name="arrow"></van-icon>
       </a>
     </div>
     <!-- 表单 -->
-    <van-form autocomplete="off">
-      <van-field placeholder="请输入手机号" type="tel"></van-field>
-      <van-field placeholder="请输入密码" type="password"></van-field>
+    <van-form ref="formRef" autocomplete="off" @submit="onSubmit">
+      <van-field
+        placeholder="请输入手机号"
+        name="mobile"
+        v-model="mobile"
+        :rules="mobileRules"
+        type="tel"
+      ></van-field>
+      <van-field
+        placeholder="请输入密码"
+        v-model="password"
+        :rules="passwordRules"
+        type="password"
+        v-if="isPass"
+      ></van-field>
+      <van-field
+        v-else
+        :placeholder="'请输入验证码'"
+        v-model="code"
+        :rules="codeRules"
+        type="password"
+      >
+        <template #button>
+          <span @click="sendCode" class="btn-send">{{
+            downLoad > 0 ? downLoad : '发送验证码'
+          }}</span>
+        </template>
+      </van-field>
       <div class="cp-cell">
-        <van-checkbox>
+        <van-checkbox v-model="agree">
           <span>我已同意</span>
           <a href="javascript:;">用户协议</a>
           <span>及</span>
@@ -27,7 +121,9 @@
         </van-checkbox>
       </div>
       <div class="cp-cell">
-        <van-button block round type="primary">登 录</van-button>
+        <van-button block round type="primary" native-type="submit"
+          >登 录</van-button
+        >
       </div>
       <div class="cp-cell">
         <a href="javascript:;">忘记密码？</a>

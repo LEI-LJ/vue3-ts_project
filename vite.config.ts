@@ -10,7 +10,7 @@ export default defineConfig({
     vue(),
     Components({
       // 关闭自动生成类型声明文件
-      dts: true,
+      dts: false,
       // 只导入文件不导入样式 在全局中已经导入样式了
       resolvers: [VantResolver({ importStyle: false })]
     })

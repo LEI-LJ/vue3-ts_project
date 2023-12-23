@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>当前是home界面</h2>
-    <router-link to="/login">login界面</router-link>
+    <button @click="$router.push('/login')">login界面</button>
   </div>
 </template>
 
