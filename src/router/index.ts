@@ -18,7 +18,29 @@ const router = createRouter({
   // vue3 中修改路由模式 通过createWbeHistory()  createWebHashHistory()
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
-    { path: '/', component: () => import('@/views/home/index.vue') },
+    {
+      path: '/',
+      component: () => import('@/views/Layout/index.vue'),
+      children: [
+        {
+          path: '/home',
+          component: () => import('@/views/Layout/Home/index.vue')
+        },
+        {
+          path: '/article',
+          component: () => import('@/views/Layout/Article/index.vue')
+        },
+        {
+          path: '/notify',
+          component: () => import('@/views/Layout/Notify/index.vue')
+        },
+
+        {
+          path: '/user',
+          component: () => import('@/views/Layout/User/index.vue')
+        }
+      ]
+    },
     {
       path: '/login',
       component: () => import('@/views/login/index.vue')

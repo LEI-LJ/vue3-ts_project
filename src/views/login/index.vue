@@ -31,15 +31,11 @@ const onSubmit = async () => {
   console.log(router, route)
 
   // 账号密码登录
-  if (isPass.value) {
-    const res = await login({ mobile: mobile.value, password: password.value })
-    userStore.setUser(res.data)
-  } else {
-    // 手机号验证码登录
-    const res = await CodeLogin({ mobile: mobile.value, code: code.value })
-    console.log(res.data)
-    userStore.setUser(res.data)
-  }
+  const res = isPass.value
+    ? await login({ mobile: mobile.value, password: password.value })
+    : await CodeLogin({ mobile: mobile.value, code: code.value })
+  console.log(res.data)
+  userStore.setUser(res.data)
 
   router.replace({ path: (route.query.redirect as string) || '/' })
 }
@@ -67,6 +63,7 @@ const sendCode = async () => {
 onUnmounted(() => {
   clearInterval(timeId.value)
 })
+const show = ref(false)
 </script>
 
 <template>
@@ -96,9 +93,17 @@ onUnmounted(() => {
         placeholder="请输入密码"
         v-model="password"
         :rules="passwordRules"
-        type="password"
+        :type="show ? 'text' : 'password'"
         v-if="isPass"
-      ></van-field>
+      >
+        <template #button>
+          <cpIcon
+            @click="show = !show"
+            style="margin-right: 10px"
+            :name="`login-eye-${show ? 'on' : 'off'}`"
+          ></cpIcon>
+        </template>
+      </van-field>
       <van-field
         v-else
         :placeholder="'请输入验证码'"
@@ -130,6 +135,7 @@ onUnmounted(() => {
       </div>
     </van-form>
     <!-- 底部 -->
+
     <div class="login-other">
       <van-divider>第三方登录</van-divider>
       <div class="icon">

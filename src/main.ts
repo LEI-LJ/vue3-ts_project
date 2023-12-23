@@ -1,5 +1,6 @@
 import { createApp } from 'vue'
 import 'vant/lib/index.css'
+import 'virtual:svg-icons-register'
 import '@/styles/main.scss'
 // 将出错信息显示在页面上
 import App from './App.vue'
