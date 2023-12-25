@@ -46,12 +46,12 @@ instance.interceptors.response.use(
   }
 )
 // 我的 post 类型
-export const myPost = <T>(url: string, data: any) => {
+export const myPost = <T>(url: string, data?: any) => {
   return instance.post<any, ResponseType<T>>(url, data)
 }
 
 // 我的 get类型
-export const myGet = <T>(url: string, params: any) => {
+export const myGet = <T>(url: string, params?: any) => {
   return instance.get<any, ResponseType<T>>(url, { params })
 }
 

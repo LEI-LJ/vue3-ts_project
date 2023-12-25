@@ -62,6 +62,11 @@ const router = createRouter({
       ]
     },
     {
+      path: '/user/patient',
+      component: () => import('@/views/Layout/User/PatientPage.vue'),
+      meta: { title: '家庭档案' }
+    },
+    {
       path: '/login',
       component: () => import('@/views/login/index.vue'),
       meta: {
@@ -70,6 +75,7 @@ const router = createRouter({
     }
   ]
 })
+
 router.beforeEach((to) => {
   // 判断 有没有登录 如果没有登录就跳转到登录界面
   // 没有登录也能访问的界面就是白名单

@@ -1,7 +1,11 @@
 <script setup lang="ts">
+import { showConfirmDialog } from 'vant'
 import { getUserInfo } from '@/apis/user'
 import type { UserInfo } from '@/types/user'
+import { useRouter } from 'vue-router'
 import { ref } from 'vue'
+import { useUserStore } from '@/stores'
+const userStore = useUserStore()
 const userInfo = ref<UserInfo>({
   id: '',
   account: '',
@@ -31,6 +35,18 @@ const tools = [
   { label: '官方客服', path: '/' },
   { label: '设置', path: '/' }
 ]
+// useRouter必须在setup中使用
+const router = useRouter()
+const isLogout = async () => {
+  await showConfirmDialog({
+    title: '提示:',
+    message: '确认退出的吗?'
+  })
+  console.log('----确认-----')
+  // console.log(router)
+  userStore.delUser()
+  router.replace('/login')
+}
 </script>
 
 <template>
@@ -116,6 +132,8 @@ const tools = [
         <template #icon><cp-icon :name="`user-tool-0${i + 1}`" /></template>
       </van-cell>
     </div>
+    <!-- 退出登录 -->
+    <a href="javascript:;" class="logout" @click="isLogout">退出登录</a>
   </div>
 </template>
 
