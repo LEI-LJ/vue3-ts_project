@@ -50,6 +50,7 @@
       &__text {
         font-size: 11px;
       }
+      /* 激活状态设置的演示 */
       &:not(.van-tabbar-item--active) {
         color: var(--cp-text3);
       }

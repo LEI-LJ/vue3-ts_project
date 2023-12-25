@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-
+import { useUserStore } from '@/stores'
 // createRouter 创建路由实例，===> new VueRouter()
 // history 是路由模式，hash模式，history模式
 // createWebHistory() 是开启history模块   http://xxx/user
@@ -25,28 +25,56 @@ const router = createRouter({
       children: [
         {
           path: '/home',
-          component: () => import('@/views/Layout/Home/index.vue')
+          component: () => import('@/views/Layout/Home/index.vue'),
+          meta: {
+            title: '首页'
+          }
         },
         {
           path: '/article',
-          component: () => import('@/views/Layout/Article/index.vue')
+          component: () => import('@/views/Layout/Article/index.vue'),
+          meta: {
+            title: '健康百科'
+          }
         },
         {
           path: '/notify',
-          component: () => import('@/views/Layout/Notify/index.vue')
+          component: () => import('@/views/Layout/Notify/index.vue'),
+          meta: {
+            title: '消息中心'
+          }
         },
 
         {
           path: '/user',
-          component: () => import('@/views/Layout/User/index.vue')
+          component: () => import('@/views/Layout/User/index.vue'),
+          meta: {
+            title: '我的'
+          }
         }
       ]
     },
     {
       path: '/login',
-      component: () => import('@/views/login/index.vue')
+      component: () => import('@/views/login/index.vue'),
+      meta: {
+        title: '登录'
+      }
     }
   ]
 })
-
+router.beforeEach((to) => {
+  // 判断 有没有登录 如果没有登录就跳转到登录界面
+  // 没有登录也能访问的界面就是白名单
+  // console.log('----from----', from)
+  // console.log('---to-----', to)
+  const whiteList = ['/login']
+  if (!useUserStore().user?.token && !whiteList.includes(to.path)) {
+    return '/login'
+  }
+})
+router.afterEach((to) => {
+  console.log('---to---', to)
+  document.title = `${to.meta.title || ''}优医问诊`
+})
 export default router
