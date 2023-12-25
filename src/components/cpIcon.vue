@@ -1,9 +1,7 @@
 <template>
-  <div>
-    <svg aria-hidden="true" class="icon">
-      <use :href="`#icon-${name}`" />
-    </svg>
-  </div>
+  <svg aria-hidden="true" class="cp-icon">
+    <use :href="`#icon-${name}`" />
+  </svg>
 </template>
 
 <script setup lang="ts">
@@ -11,7 +9,7 @@ defineProps<{ name: string }>()
 </script>
 
 <style scoped>
-.icon {
+.cp-icon {
   width: 1em;
   height: 1em;
 }

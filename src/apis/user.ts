@@ -1,6 +1,6 @@
 // import axios from ''
 // console.log(axios)
-import type { CodeType, User } from '@/types/user'
+import type { CodeType, User, UserInfo } from '@/types/user'
 import { myGet, myPost } from '@/utils/request'
 // console.log(axios)
 type UserType = {
@@ -22,3 +22,7 @@ export const sendMobileCode = ({
   mobile: string
   type: CodeType
 }) => myGet<{ code: string }>('/code', { mobile, type })
+
+// 获取个人信息
+
+export const getUserInfo = () => myGet<UserInfo>('/patient/myUser', {})

@@ -1,5 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { useUserStore } from '@/stores'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 // createRouter 创建路由实例，===> new VueRouter()
 // history 是路由模式，hash模式，history模式
 // createWebHistory() 是开启history模块   http://xxx/user
@@ -13,6 +15,11 @@ import { useUserStore } from '@/stores'
 // history 用来控制路由模式
 // createWebHistory history模式
 // createWebHashHistory hash模式
+
+NProgress.configure({
+  showSpinner: false
+})
+
 console.log(import.meta)
 const router = createRouter({
   // vue3 中修改路由模式 通过createWbeHistory()  createWebHashHistory()
@@ -72,9 +79,11 @@ router.beforeEach((to) => {
   if (!useUserStore().user?.token && !whiteList.includes(to.path)) {
     return '/login'
   }
+  NProgress.start()
 })
 router.afterEach((to) => {
   console.log('---to---', to)
-  document.title = `${to.meta.title || ''}优医问诊`
+  document.title = `${to.meta.title || ''} 优医问诊`
+  NProgress.done()
 })
 export default router

@@ -40,9 +40,10 @@
     margin: 0;
     padding: 0;
   }
-  
 }
-
+#nprogress .bar {
+  background: var(--cp-primary) !important; //自定义颜色
+}
 // a {
 //   color: var(--main-color);
 //   font-size: var(--main-size);
