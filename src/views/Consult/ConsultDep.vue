@@ -1,8 +1,10 @@
 <script setup lang="ts">
+import { useConsultStore } from '@/stores'
 import { allDep } from '@/apis/consult'
 import { ref } from 'vue'
 import type { TopDep } from '@/types/consult.ts'
 const active = ref(0)
+const store = useConsultStore()
 const list = ref<TopDep[]>([])
 const getList = async () => {
   const res = await allDep()
@@ -31,6 +33,7 @@ getList()
           to="/consult/illness"
           v-for="item in list[active]?.child"
           :key="item.id"
+          @click="store.setDep(item.id)"
           >{{ item.name }}</router-link
         >
         <!-- <router-link to="/consult/illness">科室二</router-link>
