@@ -20,6 +20,7 @@
     ]
   },
   "dependencies": {
+    "@vueuse/core": "^10.7.1",
     "axios": "^1.6.2",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.7",
@@ -33,7 +34,6 @@
     "@tsconfig/node18": "^18.2.2",
     "@types/node": "^18.19.3",
     "@types/nprogress": "^0.2.3",
-    "@types/vue": "^2.0.0",
     "@vant/auto-import-resolver": "^1.0.2",
     "@vitejs/plugin-vue": "^4.5.2",
     "@vue/eslint-config-prettier": "^8.0.0",

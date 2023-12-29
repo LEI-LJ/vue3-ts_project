@@ -68,8 +68,8 @@ export type PatientListType = {
   /**
    * 性别值
    */
-  genderValue: string
-  id: string
+  genderValue?: string
+  id?: string
   /**
    * 患者身份证号
    */

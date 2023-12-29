@@ -1,7 +1,7 @@
 // import axios from ''
 // console.log(axios)
 import type { CodeType, PatientListType, User, UserInfo } from '@/types/user'
-import { myGet, myPost } from '@/utils/request'
+import { myDelete, myGet, myPost, myPut } from '@/utils/request'
 // console.log(axios)
 type UserType = {
   mobile: string
@@ -30,3 +30,17 @@ export const getUserInfo = () => myGet<UserInfo>('/patient/myUser')
 // 获得患者列表
 
 export const getPatientList = () => myGet<PatientListType[]>('patient/mylist')
+
+// 添加患者信息
+
+export const addPatient = (data: PatientListType) =>
+  myPost('/patient/add', data)
+// 编辑接口
+
+export const editPatient = (data: PatientListType) =>
+  myPut('/patient/update', data)
+
+// 删除
+
+export const deletePatient = (id: number | string) =>
+  myDelete(`/patient/del/${id}`)

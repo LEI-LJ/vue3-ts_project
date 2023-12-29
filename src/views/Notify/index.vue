@@ -4,4 +4,4 @@
   <div class="notify-page">notify</div>
 </template>
 
-<style lang="scss" scoped></style>
+<style scoped></style>

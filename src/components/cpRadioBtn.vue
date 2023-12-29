@@ -2,7 +2,7 @@
 type OptionsItemType = { label: string; value: number | string }
 defineProps<{
   options: OptionsItemType[]
-  modelValue: number | string
+  modelValue?: number | string
 }>()
 const emits = defineEmits<{
   (e: 'update:modelValue', v: string | number): void

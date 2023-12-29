@@ -55,4 +55,12 @@ export const myGet = <T>(url: string, params?: any) => {
   return instance.get<any, ResponseType<T>>(url, { params })
 }
 
+// 我的put类型
+export const myPut = <T>(url: string, data?: any) => {
+  return instance.put<any, ResponseType<T>>(url, data)
+}
+// 我的delete类型
+export const myDelete = <T>(url: string, params?: any) => {
+  return instance.delete<any, ResponseType<T>>(url, { params })
+}
 export default instance
