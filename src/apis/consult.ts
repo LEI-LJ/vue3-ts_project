@@ -1,11 +1,15 @@
 import type {
+  ConsultOrderPreData,
+  ConsultOrderPreParams,
   DoctorPage,
   FollowType,
   Image,
   KnowledgePage,
   PageParams,
+  PartialConsult,
   TopDep
 } from '@/types/consult'
+import type { PatientListType } from '@/types/user'
 import { myGet, myPost } from '@/utils/request'
 
 export const getKnowledgeList = ({
@@ -42,4 +46,28 @@ export const uploadImg = (file: File) => {
   fd.append('file', file)
   return myPost<Image>('/upload', fd)
 }
-export const setIllnessDesc = () => {}
+
+// 获得患者信息
+
+export const PatientInfo = (id: string) =>
+  myGet<PatientListType>(`patient/info/${id}`)
+//获取支付界面的价格信息
+export const orderPreInfo = (param: ConsultOrderPreParams) =>
+  myGet<ConsultOrderPreData>('/patient/consult/order/pre', param)
+
+// 生成订单
+export const generateOrder = (data: PartialConsult) =>
+  myPost<{ id: string }>('/patient/consult/order', data)
+//支付接口
+export const payInterface = ({
+  paymentMethod,
+  orderId,
+  payCallback
+}: {
+  paymentMethod: string
+  orderId: string
+  payCallback: string
+}) =>
+  myPost<{
+    payUrl: string
+  }>('/patient/consult/pay', { paymentMethod, orderId, payCallback })

@@ -81,6 +81,10 @@ const router = createRouter({
       meta: { title: '病情描述' }
     },
     {
+      path: '/consult/pay',
+      component: () => import('@/views/Consult/ConsultPlay.vue')
+    },
+    {
       path: '/login',
       component: () => import('@/views/login/index.vue'),
       meta: {

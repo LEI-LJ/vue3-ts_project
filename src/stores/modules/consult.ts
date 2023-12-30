@@ -31,6 +31,9 @@ export const useConsultStore = defineStore(
     const setCoupon = (id?: string) => (consult.value.couponId = id)
     // 清空记录
     const clear = () => (consult.value = {})
+    //设置PatientId
+
+    // 清空仓库
     return {
       consult,
       setType,

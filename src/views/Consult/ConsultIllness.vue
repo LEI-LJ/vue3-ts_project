@@ -66,7 +66,7 @@ const next = () => {
   if (form.value.consultFlag === undefined) return showToast('请选择就诊情况')
 
   store.setIllness(form.value)
-  router.push('/user/patient')
+  router.push('/user/patient?isChange=1')
 }
 
 const disabled = computed(() => {
@@ -85,17 +85,12 @@ onMounted(() => {
       closeOnPopstate: false,
       title: '温馨提示',
       message: '是否恢复您之前填写的病情信息呢？'
+    }).then(() => {
+      const { illnessDesc, illnessTime, consultFlag, pictures } = store.consult
+      form.value = { illnessDesc, illnessTime, consultFlag, pictures }
+      console.log(pictures)
+      fileList.value = pictures || []
     })
-      .then(() => {
-        const { illnessDesc, illnessTime, consultFlag, pictures } =
-          store.consult
-        form.value = { illnessDesc, illnessTime, consultFlag, pictures }
-        console.log(pictures)
-        fileList.value = pictures || []
-      })
-      .catch(() => {
-        // showToast()
-      })
   }
 })
 </script>

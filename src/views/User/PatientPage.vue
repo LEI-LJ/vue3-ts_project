@@ -9,13 +9,22 @@ import {
   editPatient,
   deletePatient
 } from '@/apis/user'
+import { useConsultStore } from '@/stores'
 import { ref, computed } from 'vue'
 import type { FormInstance } from 'vant'
-import { showConfirmDialog, showSuccessToast } from 'vant'
+import { showConfirmDialog, showSuccessToast, showToast } from 'vant'
+import { useRoute, useRouter } from 'vue-router'
+const store = useConsultStore()
 const PatientList = ref<PatientListType[]>()
+const patientId = ref<string>()
 const getData = async () => {
   PatientList.value = (await getPatientList()).data
   console.log(PatientList.value)
+  PatientList.value.forEach((item) => {
+    if (item.defaultFlag === 1) {
+      patientId.value = item.id
+    }
+  })
 }
 getData()
 const options = [
@@ -84,16 +93,34 @@ const onDeletePatient = async () => {
   show.value = false
   getData()
 }
+const route = useRoute()
+const router = useRouter()
+// console.log(route)
+const isChange = computed(() => {
+  return route.query.isChange
+})
+const next = () => {
+  if (!patientId.value) return showToast('请选就诊择患者')
+  store.setPatient(patientId.value)
+  router.push('/consult/pay')
+}
 </script>
 
 <template>
   <div class="patient-page">
-    <cpNavbar title="家庭档案"></cpNavbar>
+    <cpNavbar :title="isChange ? '选择患者' : '家庭档案'"></cpNavbar>
+    <!-- 头部提示 -->
+    <div class="patient-change" v-if="isChange">
+      <h3>请选择患者信息</h3>
+      <p>以便医生给出更准确的治疗，信息仅医生可见</p>
+    </div>
     <div class="patient-list">
       <div
         class="patient-item"
-        v-for="item in PatientList as PatientListType[]"
+        :class="{ selected: patientId === item.id }"
+        v-for="item in PatientList"
         :key="item.id"
+        @click="patientId = item.id"
       >
         <div class="info">
           <span class="name">{{ item.name }}</span>
@@ -104,7 +131,7 @@ const onDeletePatient = async () => {
           <span>{{ item.age }}岁</span>
         </div>
         <div class="icon">
-          <cp-icon name="user-edit" @click="showPopup(item)" />
+          <cp-icon name="user-edit" @click.stop="showPopup(item)" />
         </div>
         <div class="tag" v-if="item.defaultFlag">默认</div>
       </div>
@@ -117,6 +144,10 @@ const onDeletePatient = async () => {
         <p>添加患者</p>
       </div>
       <div class="patient-tip">最多可添加 6 人</div>
+    </div>
+    <!-- 底部按钮 -->
+    <div class="patient-next" v-if="isChange" @click="next">
+      <van-button type="primary" round block>下一步</van-button>
     </div>
     <van-popup v-model:show="show" position="right">
       <cpNavbar
@@ -263,5 +294,25 @@ const onDeletePatient = async () => {
     color: var(--cp-price);
     background-color: var(--cp-bg);
   }
+}
+.patient-change {
+  padding: 15px;
+  > h3 {
+    font-weight: normal;
+    margin-bottom: 5px;
+  }
+  > p {
+    color: var(--cp-text3);
+  }
+}
+.patient-next {
+  padding: 15px;
+  background-color: #fff;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 80px;
+  box-sizing: border-box;
 }
 </style>

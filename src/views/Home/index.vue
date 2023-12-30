@@ -3,6 +3,8 @@
 import KnowledgeList from './components/KnowledgeList.vue'
 import FollowDoctor from './components/FollowDoctor.vue'
 import { ref } from 'vue'
+import { useConsultStore } from '@/stores'
+const store = useConsultStore()
 const active = ref(1)
 </script>
 
@@ -21,14 +23,14 @@ const active = ref(1)
     <div class="home-navs">
       <van-row>
         <van-col span="8">
-          <router-link to="/" class="nav">
+          <router-link to="/" class="nav" @click="store.setType(1)">
             <cp-icon name="home-doctor"></cp-icon>
             <p class="title">问医生</p>
             <p class="desc">按科室查问医生</p>
           </router-link>
         </van-col>
         <van-col span="8">
-          <router-link to="/consult/fast" class="nav">
+          <router-link to="/consult/fast" class="nav" @click="store.setType(2)">
             <cp-icon name="home-graphic"></cp-icon>
             <p class="title">极速问诊</p>
             <p class="desc">20s医生极速回复</p>
